@@ -81,7 +81,7 @@ Ship.prototype.update = function () {
         }
         var nearest = this.findNearest();
         if(nearest != null) {
-            if (nearest.y < this.y - 35) {
+            if (nearest.colliderCircle.y < this.y - 20) {
                 if (nearest.colliderCircle.x < this.colliderCircle.x + 3 && 
                     nearest.colliderCircle.x > this.colliderCircle.x - 3) {
                 } else if (nearest.colliderCircle.x > this.colliderCircle.x) {
@@ -96,9 +96,9 @@ Ship.prototype.update = function () {
                 } else if (nearest.colliderCircle.x < this.colliderCircle.x &&
                         nearest.colliderCircle.x > this.colliderCircle.x - 15) {
                     if(this.x < 70) this.x += this.speed;
-                } else if (this.colliderCircle.x > 65) {
+                } else if (this.colliderCircle.x > 55) {
                     this.x -= this.speed;
-                } else if (this.colliderCircle.x < 15) {
+                } else if (this.colliderCircle.x < 25) {
                     this.x += this.speed;
                 }
             }
@@ -148,8 +148,12 @@ Laser.prototype.update = function () {
     this.game.entities.forEach(function(e) {
         if(e.type == 'alien') {
             if(detectCollision(that.colliderCircle, e.colliderCircle)) {
+                e.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 
+                    15, 14, 15, 14, 1, 1, true, false);
+                e.kill = true;
                 that.removeFromWorld = true;
-                e.removeFromWorld = true;
+                window.setTimeout(function() {e.removeFromWorld = true;}, 150);
+                
             }
         }
     })
@@ -164,9 +168,10 @@ Laser.prototype.draw = function (ctx) {
 function Alien(game, posx, posy) {
     this.type = 'alien';
     this.mCtx;
+    this.kill = false;
     this.attacktimer = 0;
     this.attackdelay = 10 + Math.random() * 100;
-    this.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 0, 0, 15, 14, 1, 1, true, false);
+    this.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 0, 0, 15, 14, 0.05, 4, true, false);
     Entity.call(this, game, posx, posy);
     this.colliderCircle = {radius: 2.5, x: this.x + 3.5, y: this.y + 2};
 }
@@ -179,9 +184,9 @@ Alien.prototype.update = function () {
     if(this.y > 80) {
         this.removeFromWorld = true;
     }
-    if(this.attacktimer++ > this.attackdelay) {
+    if(this.attacktimer++ > this.attackdelay && !this.kill) {
         this.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 
-            15, 0, 15, 14, 1, 1, true, false);
+            0, 14, 15, 14, 1, 1, true, false);
         this.y++;
         if(detectCollision(this.colliderCircle, this.game.entities[1].colliderCircle)) {
             this.game.entities.forEach(function(e) {
