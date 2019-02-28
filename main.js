@@ -20,7 +20,7 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.addEntity(card);
 
     var titleGone = false;
-    ctx.canvas.addEventListener("keypress", function (e) {
+    function enterListener(e) {
         if (e.code === "Enter") {
             if(!titleGone) {
                 card.removeFromWorld = true;
@@ -37,9 +37,11 @@ ASSET_MANAGER.downloadAll(function () {
                 gameEngine.addEntity(bg);
                 gameEngine.addEntity(ship);
                 gameEngine.addEntity(mothership, ship);
+                ctx.canvas.removeEventListener("keypress", enterListener);
             }
         }
-    }, false);
+    }
+    ctx.canvas.addEventListener("keypress", enterListener, false);
 
     gameEngine.init(ctx);
     gameEngine.start();
@@ -54,4 +56,10 @@ function detectCollision(colliderCircle1, colliderCircle2) {
         collisionDetected = true;
     }
     return collisionDetected;
+}
+
+function distance(e1, e2) {
+    var dx = (e1.colliderCircle.x - e2.colliderCircle.x);
+    var dy = (e1.colliderCircle.y - e2.colliderCircle.y);
+    return Math.sqrt(dx * dx + dy * dy);
 }

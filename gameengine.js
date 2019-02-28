@@ -84,6 +84,10 @@ GameEngine.prototype.startInput = function () {
     this.ctx.canvas.addEventListener("keyup", function (e) {
         if (e.code === "KeyD") that.d = false;
     }, false);
+
+    this.ctx.canvas.addEventListener("keydown", function (e) {
+        if (e.code === "KeyP") that.p = true;
+    }, false);
 	
     console.log('Input started');
 }
