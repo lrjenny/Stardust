@@ -7,6 +7,7 @@ ASSET_MANAGER.queueDownload("./images/hyperspace.png");
 ASSET_MANAGER.queueDownload("./images/ship.png");
 ASSET_MANAGER.queueDownload("./images/alien.png");
 ASSET_MANAGER.queueDownload("./images/laser.png");
+ASSET_MANAGER.queueDownload("./images/gameover.png");
 
 ASSET_MANAGER.downloadAll(function () {
     var canvas = document.getElementById('gameWorld');

@@ -163,6 +163,7 @@ Laser.prototype.draw = function (ctx) {
 
 function Alien(game, posx, posy) {
     this.type = 'alien';
+    this.mCtx;
     this.attacktimer = 0;
     this.attackdelay = 10 + Math.random() * 100;
     this.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 0, 0, 15, 14, 1, 1, true, false);
@@ -183,7 +184,12 @@ Alien.prototype.update = function () {
             15, 0, 15, 14, 1, 1, true, false);
         this.y++;
         if(detectCollision(this.colliderCircle, this.game.entities[1].colliderCircle)) {
-            location.reload();
+            this.game.entities.forEach(function(e) {
+                e.removeFromWorld = true;
+            });
+            this.mCtx.scale(0.1, 0.1);
+            this.game.addEntity(new Card(this.game, 'gameover'));
+            window.setTimeout(function() {location.reload();}, 3000);
         }
 
         var nearest = this.findNearest(); //AI Controls---------------------
@@ -210,6 +216,7 @@ Alien.prototype.update = function () {
 }
 
 Alien.prototype.draw = function (ctx) {
+    this.mCtx = ctx;
     ctx.save();
     ctx.scale(0.5, 0.5);
     ctx.imageSmoothingEnabled = false;
