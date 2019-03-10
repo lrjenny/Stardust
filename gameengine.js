@@ -131,11 +131,21 @@ GameEngine.prototype.loop = function () {
     this.space = null;
 }
 
-function Entity(game, x, y) {
+function Entity(game, x, y, type) {
+    this.type = type;
     this.game = game;
     this.x = x;
     this.y = y;
     this.removeFromWorld = false;
+}
+
+Entity.prototype.getSaveValues = function() {
+    var result = {
+        type:this.type,
+        x:this.x,
+        y:this.y
+    }
+    return result;
 }
 
 Entity.prototype.update = function () {
