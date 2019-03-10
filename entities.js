@@ -8,7 +8,7 @@ function Background(game) {
         0, 0, 80, 80, 0.04, 10, false, true);
     this.hyperspace = false;
     this.reverseHyperSpace = false;
-    Entity.call(this, game, 0, 0);
+    Entity.call(this, game, 0, 0, this.type);
 }
 
 Background.prototype = new Entity();
@@ -45,14 +45,14 @@ Background.prototype.draw = function (ctx) {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-function Ship(game) {
+function Ship(game, posx, posy) {
     this.type = 'ship';
     this.animation = new Animation(ASSET_MANAGER.getAsset("./images/ship.png"), 0, 0, 10, 10, 1, 1, true, false);
     this.speed = 8/7;
     this.playerControls = false;
     this.leftGun = true;
     this.shoottimer = 0;
-    Entity.call(this, game, 35, 55);
+    Entity.call(this, game, posx, posy, this.type);
     this.colliderCircle = {radius: 5, x: this.x + 5, y: this.y + 5};
 }
 
@@ -131,7 +131,7 @@ function Laser(game, posx, posy) {
     this.type = 'laser';
     this.speed = 2;
     this.animation = new Animation(ASSET_MANAGER.getAsset("./images/laser.png"), 0, 0, 1, 4, 1, 1, true, false);
-    Entity.call(this, game, posx, posy);
+    Entity.call(this, game, posx, posy, this.type);
     this.colliderCircle = {radius: 1, x: this.x + 0.5, y: this.y + 1}
 }
 
@@ -172,7 +172,7 @@ function Alien(game, posx, posy) {
     this.attacktimer = 0;
     this.attackdelay = 10 + Math.random() * 100;
     this.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 0, 0, 15, 14, 0.05, 4, true, false);
-    Entity.call(this, game, posx, posy);
+    Entity.call(this, game, posx, posy, this.type);
     this.colliderCircle = {radius: 2.5, x: this.x + 3.5, y: this.y + 2};
 }
 
@@ -180,6 +180,7 @@ Alien.prototype = new Entity();
 Alien.prototype.constructor = Alien;
 
 Alien.prototype.update = function () {
+    var ship = this.findShip()
     this.colliderCircle = {radius: 2.5, x: this.x + 3.5, y: this.y + 2};
     if(this.y > 80) {
         this.removeFromWorld = true;
@@ -188,7 +189,7 @@ Alien.prototype.update = function () {
         this.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 
             0, 14, 15, 14, 1, 1, true, false);
         this.y++;
-        if(detectCollision(this.colliderCircle, this.game.entities[1].colliderCircle)) {
+        if(detectCollision(this.colliderCircle, ship.colliderCircle)) {
             this.game.entities.forEach(function(e) {
                 e.removeFromWorld = true;
             });
@@ -204,16 +205,16 @@ Alien.prototype.update = function () {
             } else if(nearest.colliderCircle.x > this.x && nearest.colliderCircle.x < this.x+4) {
                 this.x--;
             } else {
-                if(this.game.entities[1].colliderCircle.x < this.x) {
+                if(ship.colliderCircle.x < this.x) {
                     this.x--;
-                } else if(this.game.entities[1].colliderCircle.x > this.x) {
+                } else if(ship.colliderCircle.x > this.x) {
                     this.x++;
                 }
             }
         } else {
-            if(this.game.entities[1].colliderCircle.x < this.x) {
+            if(ship.colliderCircle.x < this.x) {
                 this.x--;
-            } else if(this.game.entities[1].colliderCircle.x > this.x) {
+            } else if(ship.colliderCircle.x > this.x) {
                 this.x++;
             }
         } //End AI -------------------------
@@ -229,6 +230,16 @@ Alien.prototype.draw = function (ctx) {
     ctx.restore();
 }
 
+Alien.prototype.findShip = function() {
+    var ship;
+    this.game.entities.forEach(function(e) {
+        if(e.type === 'ship') {
+            ship = e;
+        }
+    });
+    return ship;
+}
+
 Alien.prototype.findNearest = function() {
     var nearest;
     var that = this;
@@ -240,7 +251,7 @@ Alien.prototype.findNearest = function() {
                 nearest = e;
             }
         }
-    })
+    });
     return nearest;
 }
 
@@ -250,7 +261,7 @@ function Mothership(game) {
     this.type = 'mothership';
     this.spawntimer = 0;
     this.spawnthreshold = 45;
-    Entity.call(this, game, 0, 0);
+    Entity.call(this, game, 0, 0, this.type);
 }
 
 Mothership.prototype = new Entity();
@@ -281,7 +292,7 @@ Mothership.prototype.remainingAliens = function() {
 function Card(game, type) {
     this.type = type;
     this.animation = new Animation(ASSET_MANAGER.getAsset("./images/" + this.type + ".png"), 0, 0, 80, 40, 1, 1, true, false);
-    Entity.call(this, game, 0, 0);
+    Entity.call(this, game, 0, 0, this.type);
 }
 
 Card.prototype = new Entity();

@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Stardust</title>
+    <script type="text/javascript" src="http://24.16.255.56:8888/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./animation.js"></script>
@@ -19,7 +20,20 @@
         display: block;
         width: 800px;
     }
-  </style>
+    div {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        width: 800px;
+    }
+    </style>
     <canvas id="gameWorld" tabindex="1" width="800" height="700"></canvas>
+    <div id = "wrap">
+        <button id="save" type="button">Save</button>
+        <button id="load" type="button">Load</button>
+        <div id = "text"></div>
+    </div>
 </body>
 </html>
