@@ -185,7 +185,7 @@ Alien.prototype.update = function () {
     if(this.y > 80) {
         this.removeFromWorld = true;
     }
-    if(this.attacktimer++ > this.attackdelay && !this.kill) {
+    if((this.attacktimer++ > this.attackdelay || this.y > 0) && !this.kill) {
         this.animation = new Animation(ASSET_MANAGER.getAsset("./images/alien.png"), 
             0, 14, 15, 14, 1, 1, true, false);
         this.y++;
